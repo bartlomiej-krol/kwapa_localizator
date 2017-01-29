@@ -1,0 +1,64 @@
+<div class="col-md-12">
+
+<%= link_to '< Wstecz', locations_path, :class => 'button' %>
+<h1>Edycja lokalizacji</h1>
+
+<%= form_for :location, url: location_path(:id => @location.id), method: :patch do |f| %>
+  <div class="col-md-12">
+    <div class="col-md-4">
+      <%= f.label :Nazwa %>
+    </div>
+    <div class="col-md-8">
+      <%= f.text_field :name, :list => "names_list" %>
+    </div>
+  </div>
+  <datalist id="names_list">
+    <option value="Kebab">
+    <option value="Bar">
+    <option value="Sklep">
+    <option value="Restauracja">
+    <option value="Kino">
+    <option value="Teatr">
+    <option value="Biuro podróży">
+    <option value="Galeria">
+    <option value="Klub">
+    <option value="Plac">
+  </datalist>
+  <div class="col-md-12">
+    <div class="col-md-4">
+      <%= f.label "Szerokość geograficzna" %>
+    </div>
+    <div class="col-md-8">
+      <%= f.text_field :latitude %>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-4">
+      <%= f.label "Długość geograficzna" %>
+    </div>
+    <div class="col-md-8">
+      <%= f.text_field :longitude %>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-4">
+      <%= f.label :Opis %>
+    </div>
+    <div class="col-md-8">
+      <%= f.text_area :description %>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-4">
+      <%= f.label "Słowa kluczowe" %>
+    </div>
+    <div class="col-md-8">
+      <%= f.text_field :keywords %>
+    </div>
+  </div>
+ 
+  <div class="col-md-12">
+    <%= f.submit :Zapisz %>
+  </div>
+<% end %>
+</div>

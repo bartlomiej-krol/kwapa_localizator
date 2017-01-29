@@ -1,0 +1,51 @@
+<div class="col-md-12">	
+<%= link_to '< Wstecz', locations_path, :class => "button" %>
+
+	<div class="col-md-12">
+		<div class="col-md-12"><h3><strong><%= @location.name %></strong></h3></div>	
+		<div class="col-md-8"></div>	
+		<div class="col-md-4">
+			<div class="col-md-4"><%= link_to 'Edytuj', edit_location_path(:id => @location.id), :class => 'button' %></div>
+			<div class="col-md-4"><%= link_to 'Usuń', location_path(:id => @location.id), method: :delete, :class => 'button', :data=>{:confirm => 'Czy na pewno chczesz usuąć?'}  %></div>
+		</div>
+		<hr>
+		<div class="col-md-12">
+			<strong>Współrzędne: </strong><br><%= @location.latitude %>, <%= @location.longitude %>
+		</div>
+		<br>
+		<hr>
+		<br>
+		<div class="col-md-12">
+			<strong>Opis: </strong><br><%= @location.description %>
+		</div>
+		<br>
+		<hr>
+		<br>
+		<div class="col-md-12">
+			<strong>Słowa kluczowe: </strong><br><%= @location.keywords %>
+		</div>
+		<br>
+		<hr>
+		<br>
+    	<div class="col-md-12">
+    		<div id="map" style="width:100%;height:400px"></div>
+    	</div>
+	    <script>
+	      function initMap() {
+	        var uluru = {lat: <%= @location.latitude %>, lng: <%= @location.longitude %>};
+	        var map = new google.maps.Map(document.getElementById('map'), {
+	          zoom: 7,
+	          center: uluru
+	        });
+	        var marker = new google.maps.Marker({
+	          label: "<%= @location.name %>",
+	          position: uluru,
+	          map: map
+	        });
+	      }
+	    </script>
+	    <% api_key = "AIzaSyAPCtxJ6kNAH9dxtjDzglDLWHlPSQx7e_g" %>
+	    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= api_key %>&callback=initMap"></script>
+
+	</div>
+</div>

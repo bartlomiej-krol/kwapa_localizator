@@ -1,0 +1,113 @@
+<div class="col-md-12">
+	<%= link_to '< Wstecz', {controller: 'home'}, :class => 'button' %>
+	<h1>Twoje lokalizacje:</h1>
+	<%= link_to "Nowa lokalizacja", new_location_path, :class => 'button' %>
+	<hr>
+	<% if @locations.empty? %>
+		Nie posiadasz obecnie żadnej dodanej lokalizacji.
+	<% else %>
+		<%  @locations.each do |location| %>
+			<div class="col-md-12">
+				<div class="col-md-10">
+		            <%= link_to "#{location.name} (#{location.latitude}, #{location.longitude})", location_path(:id => location.id) %>
+				</div>
+				<div class="col-md-1">
+		            <%= link_to "Edytuj", edit_location_path(:id => location.id), :class => 'button' %>
+				</div>
+				<div class="col-md-1">
+		            <%= link_to "Usuń", location_path(:id => location.id), method: :delete, :class => 'button', :data=>{:confirm => 'Czy na pewno chczesz usuąć?'}  %>
+				</div>
+			</div>
+		<% end %>
+	<% end %>
+		<br>
+		<hr>
+		<br>
+    	<div class="col-md-12">
+    		<div id="map" style="width:100%;height:400px"></div>
+    	</div>
+    	<% 
+    		avg_latitude = 0.0;
+    		avg_longitude = 0.0;
+    		min_lat = 0.0; max_lat = 0.0;
+    		min_lng = 0.0; max_lng = 0.0;
+    		zoom = 7;
+    		n = 0;
+    		@locations.each do |location| 
+    			n = n + 1;
+    			if n == 1 || min_lat > location.latitude
+    				min_lat = location.latitude
+    			end
+    			if n == 1 || max_lat < location.latitude
+    				max_lat = location.latitude
+    			end
+    			if n == 1 || min_lng > location.longitude
+    				min_lng = location.longitude
+    			end
+    			if n == 1 || max_lng > location.longitude
+    				max_lng = location.longitude
+    			end
+    			avg_latitude = avg_latitude + location.latitude
+    			avg_longitude = avg_longitude + location.longitude
+    		end
+    		if n > 0
+	    		avg_latitude = avg_latitude / n;
+	    		avg_longitude = avg_longitude / n;
+	    		dlat = max_lat - min_lat;
+	    		dlng = max_lng - min_lng;
+	    		if dlat > 100 || dlng > 100
+	    			zoom = 2
+	    		elsif dlat > 50 || dlng > 50
+	    			zoom = 3
+	    		elsif dlat > 25 || dlng > 25
+	    			zoom = 4
+	    		elsif dlat > 10 || dlng > 10
+	    			zoom = 5
+	    		elsif dlat > 3 || dlng > 3
+	    			zoom = 6
+	    		elsif dlat > 1 || dlng > 1
+	    			zoom = 7
+	    		elsif dlat > 0.25 || dlng > 0.25
+	    			zoom = 9
+	    		elsif dlat > 0.1 || dlng > 0.1
+	    			zoom = 10
+	    		elsif dlat > 0.05 || dlng > 0.05
+	    			zoom = 11
+	    		elsif dlat > 0.01 || dlng > 0.01
+	    			zoom = 12
+	    		else
+	    			zoom = 13
+	    		end
+	    	end
+    	%>
+	    <script>
+		function initMap() {
+	        var map = new google.maps.Map(document.getElementById('map'), {
+	          zoom: <%= zoom %>,
+	          center: {lat: <%= avg_latitude %>, lng: <%= avg_longitude %>}
+	        });
+
+	        // Add some markers to the map.
+	        // Note: The code uses the JavaScript Array.prototype.map() method to
+	        // create an array of markers based on a given "locations" array.
+	        // The map() method here has nothing to do with the Google Maps API.
+	        var markers = locations.map(function(location, i) {
+	          return new google.maps.Marker({
+	            position: location,
+	            label: labels[i],
+	          	map: map
+	          });
+	        });
+		}
+
+      var locations = [
+      	<% @locations.each do |location| %>{lat: <%=location.latitude%>, lng: <%=location.longitude%>}, <% end %>
+      ]
+      var labels = [
+      	<% @locations.each do |location| %>"<%=location.name%>", <% end %>
+      ]
+
+	    </script>
+	    <% api_key = "AIzaSyAPCtxJ6kNAH9dxtjDzglDLWHlPSQx7e_g" %>
+	    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= api_key %>&callback=initMap"></script>
+</div>

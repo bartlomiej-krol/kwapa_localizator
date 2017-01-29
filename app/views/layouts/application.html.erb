@@ -2,13 +2,48 @@
 <html>
 <head>
   <title>Kwapa Localizator</title>
+  <%= stylesheet_link_tag    'bootstrap.min', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag    'bootstrap-theme.min', media: 'all', 'data-turbolinks-track' => true %>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+	<div class="top">
+      
+	    <article class="logo">
+	    	<a href="index.html"></a>
+	    </article>
+      
+    	<div class="navbar col-xs-12">      
+	        <div class="col-xs-12">
+		          <div class="col-md-2"></div>
+		          <div class="col-md-7 nav-item"><%= link_to 'Główna', root_path, :class => (current_page?(root_path) ? "selected" : "") %></div>
+		        <% if user_signed_in? %>
+		          <div class="col-md-1 nav-item"><%= link_to 'Moje lokacje', locations_path %></div>
+		          <div class="col-md-1 nav-item"><i class="icon-user"></i><%= link_to 'Profil', edit_user_registration_path, :class => (current_page?(edit_user_registration_path) ? "selected" : "")  %></div>
+		          <div class="col-md-1 nav-item"><%= link_to 'Wyloguj', destroy_user_session_path, :method => :delete %></div>
+		        <% else %>
+		          <div class="col-md-1"></div>
+		          <div class="col-md-1 nav-item"><%= link_to 'Zaloguj', new_user_session_path, :class => (current_page?(new_user_session_path) ? "selected" : "")  %></div>
+		          <div class="col-md-1 nav-item"><%= link_to 'Rejestracja', new_user_registration_path, :class => (current_page?(new_user_registration_path) ? "selected" : "")  %></div>
+		        <% end %>
+	    	</div>
+    	</div>
+	</div>
+
+	<div class="content">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			<div class="col-xs-12 infos">
+				<p class="notice"><%= flash[:notice] %></p>
+				<p class="alert"><%= flash[:alert] %></p>
+			</div>
+			<%= yield %>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
 
 </body>
 </html>
